@@ -6,15 +6,16 @@
 
     let currentLevel = 0;
     let previousLevel = 0;
+    let station = "";
 
-    async function handleClick(x) {
+    async function handleClick(x, y) {
         const url = "https://environment.data.gov.uk/flood-monitoring/id/stations/"+ x + "/readings?_sorted&_limit=2";
         const res = await fetch(url);
         const measures = await res.json();
         console.log(measures);
         currentLevel = measures.items[0].value;
         previousLevel = measures.items[1].value;
-        
+        station = y;
   }
   </script>
   
@@ -33,7 +34,7 @@
                     </button>
                     <ul class="dropdown-menu">
                      {#each data.item.items as station}
-                        <li><a class="dropdown-item" on:click={handleClick(station.notation)} href="#">{station.label}</a></li>
+                        <li><a class="dropdown-item" on:click={handleClick(station.notation, station.label)} href="#">{station.label}</a></li>
                      {/each}
                     </ul>
                     
@@ -47,14 +48,31 @@
             <div class="container pt-2">
                 <hr />
                 <h1>Sea Level</h1>
-                {#if currentLevel = 0}
+                {#if currentLevel == 0}
                     <div>
-                        <h3>Please select a station from the dropdown above.</h3>
+                        <p>Please select a station from the dropdown above.</p>
                     </div>
                     {:else}
+                    <!--This is the little card showing the current / previous levels and the graphic for if the tide is coming in or going out-->
                     <div>
-                    <p>Current level: {currentLevel}</p>
-                    <p>Previous level: {previousLevel}</p>
+                        <h5>{station}</h5>
+                        <p>Current level: {currentLevel} <br>
+                        Previous level: {previousLevel}</p>
+                        {#if currentLevel > previousLevel}
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-top" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M9 20v-8h-3.586a1 1 0 0 1 -.707 -1.707l6.586 -6.586a1 1 0 0 1 1.414 0l6.586 6.586a1 1 0 0 1 -.707 1.707h-3.586v8a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                              </svg>
+                        </div>
+                        {:else}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-down" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M15 4v8h3.586a1 1 0 0 1 .707 1.707l-6.586 6.586a1 1 0 0 1 -1.414 0l-6.586 -6.586a1 1 0 0 1 .707 -1.707h3.586v-8a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1z" />
+                            </svg>
+                        {/if}
+
+
                     </div>
                 {/if}
                 
