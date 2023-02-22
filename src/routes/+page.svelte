@@ -49,7 +49,7 @@
             <div class="container pt-2">
                 <hr />
                 <h1>Sea Level</h1>
-                {#if currentLevel = 0 && previousLevel = 0}
+                {#if currentLevel = 0}
                 <p>Current level: {currentLevel}</p>
                 <p>Previous level: {previousLevel}</p>
     
