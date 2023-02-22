@@ -47,8 +47,17 @@
             <div class="container pt-2">
                 <hr />
                 <h1>Sea Level</h1>
-                <p>Current level: {currentLevel}</p>
-                <p>Previous level: {previousLevel}</p>
+                {#if currentLevel = 0}
+                    <div>
+                        <h3>Please select a station from the dropdown above.</h3>
+                    </div>
+                    {:else}
+                    <div>
+                    <p>Current level: {currentLevel}</p>
+                    <p>Previous level: {previousLevel}</p>
+                    </div>
+                {/if}
+                
             </div>
         </div>
     </div>
