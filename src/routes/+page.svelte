@@ -21,6 +21,7 @@
 
 
 <div class="container">
+    
     <div class="row">
         <div class="col">
             <div class="container pt-4 pb-2">
@@ -52,12 +53,11 @@
                 {#if currentLevel = 0}
                 <p>Current level: {currentLevel}</p>
                 <p>Previous level: {previousLevel}</p>
-    
-
-
             </div>
         </div>
     </div>
+    
+  
 </div>
 
 
