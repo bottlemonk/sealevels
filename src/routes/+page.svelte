@@ -1,12 +1,16 @@
 <script>
     /** @type {import('./$types').PageLoad} */
     import SeaLevel from '../components/SeaLevel.svelte';
+    import DailyReadings from '../components/DailyReadings.svelte';
+	import Layout from './+layout.svelte';
+	import MeasuresCard from '../components/MeasuresCard.svelte';
     export let data;
     console.log(data);
 
     let currentLevel = 0;
     let previousLevel = 0;
     let station = "";
+    let stationID = "";
 
     async function handleClick(x, y) {
         const url = "https://environment.data.gov.uk/flood-monitoring/id/stations/"+ x + "/readings?_sorted&_limit=2";
@@ -16,23 +20,28 @@
         currentLevel = measures.items[0].value;
         previousLevel = measures.items[1].value;
         station = y;
-  }
+        stationID = x;
+  };
+
   </script>
   
 
 
 <div class="container">
-    
+    <!--First row of the page layout-->
     <div class="row">
+        <!--First column of the page layout-->
         <div class="col">
             <div class="container pt-4 pb-2">
                 <h1>Stations</h1>
-                
+                <!--Bootstrap dropdown list with button functionality-->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Select station
                     </button>
                     <ul class="dropdown-menu">
+                    <!--FOR EACH statement that takes the data pulled on page load and uses the station ID (notation) and label (station name) as the dropdown option name. When a user selects an option it passes the ID and Name through to a page function
+                    which is then used to make second on-demand API call to retrive the last 2 readings from the selected station-->
                      {#each data.item.items as station}
                         <li><a class="dropdown-item" on:click={handleClick(station.notation, station.label)} href="#">{station.label}</a></li>
                      {/each}
@@ -43,7 +52,9 @@
         </div>
     </div>
 
+    <!--Second row of the page layout-->
     <div class="row">
+        <!--Second column of the page layout-->
         <div class="col">
             <div class="container pt-2">
                 <hr />
@@ -53,16 +64,17 @@
                         <p>Please select a station from the dropdown above.</p>
                     </div>
                     {:else}
-                    <!--This is the little card showing the current / previous levels and the graphic for if the tide is coming in or going out-->
+                    <!--Container showing the current / previous levels and the graphic for if the tide is coming in or going out-->
                     <div>
                         <h5>{station}</h5>
                         <p>
                             Current level: {currentLevel} <br>
                             Previous level: {previousLevel}
                         </p>
-                        
+                        <!--IF statement to check if the tide is coming in or going out and then show the correct graphic and text-->
                         {#if currentLevel > previousLevel}
                         
+                        <!--IF the current measurement is higher than the previous measurement then the tide is coming in show this-->
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-top" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -70,7 +82,9 @@
                               </svg>
                               <p>Tides coming in</p>
                               </div>
-                        {:else}
+                        
+                              <!--Otherwise show this-->
+                              {:else}
                         
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-down" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -81,9 +95,20 @@
                         </div>
                         {/if}
 
+                        <hr/>
+
+                        <!--SECTION-->
+                       
+
+                        <button type="button" class="btn btn-primary" >Get daily readings</button>
+                        <hr>
+                        
+                        
+                        <!---END of SECTION-->
 
                     </div>
                 {/if}
+                
                 
             </div>
         </div>
@@ -91,12 +116,6 @@
     
   
 </div>
-
-
-
-
-
-
 
 
 
