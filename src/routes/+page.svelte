@@ -1,9 +1,9 @@
 <script>
     /** @type {import('./$types').PageLoad} */
-    import SeaLevel from '../components/SeaLevel.svelte';
-    import DailyReadings from '../components/DailyReadings.svelte';
-	import Layout from './+layout.svelte';
+    import { Line } from 'svelte-chartjs'
 	import MeasuresCard from '../components/MeasuresCard.svelte';
+
+    
     export let data;
     console.log(data);
 
@@ -11,8 +11,12 @@
     let previousLevel = 0;
     let station = "";
     let stationID = "";
+    let daily;
+    let refreshed = false;
+    let measuresVisible = false;
 
     async function handleClick(x, y) {
+        refreshed = !refreshed;
         const url = "https://environment.data.gov.uk/flood-monitoring/id/stations/"+ x + "/readings?_sorted&_limit=2";
         const res = await fetch(url);
         const measures = await res.json();
@@ -21,7 +25,14 @@
         previousLevel = measures.items[1].value;
         station = y;
         stationID = x;
+        measuresVisible = false;
   };
+
+    function showMeasures() {
+        measuresVisible = true;
+  };
+
+  stationID = stationID;
 
   </script>
   
@@ -95,16 +106,19 @@
                         </div>
                         {/if}
 
-                        <hr/>
 
-                        <!--SECTION-->
+                        <!--Component SECTION--------------------------------------------->
                        
-
-                        <button type="button" class="btn btn-primary" >Get daily readings</button>
                         <hr>
+                        <button type="button" class="btn btn-primary" on:click={showMeasures}>Get the last 100 readings</button>
+                        {#if measuresVisible}
+                            {#key refreshed}
+                                <MeasuresCard {stationID}/>
+                            {/key}
+                        {/if}
                         
                         
-                        <!---END of SECTION-->
+                        <!---END of SECTION------------------------------------->
 
                     </div>
                 {/if}

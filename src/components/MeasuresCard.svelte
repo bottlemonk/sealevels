@@ -3,7 +3,7 @@
     export let stationID;
 
     const getReadings = async () => {
-        const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit=50");
+        const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit=100");
         const data = await res.json();
         return data;
     }
