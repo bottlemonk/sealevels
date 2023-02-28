@@ -1,0 +1,3 @@
+{#await daily.items then item}
+                            {item}
+                        {/await}
