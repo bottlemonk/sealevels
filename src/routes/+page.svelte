@@ -13,6 +13,7 @@
     let daily;
     let refreshed = false;
     let measuresVisible = false;
+    let initReturn = 20;
 
     async function handleClick(x, y) {
         refreshed = !refreshed;
@@ -27,11 +28,20 @@
         measuresVisible = false;
   };
 
-    function showMeasures() {
-        measuresVisible = true;
-  };
+    async function dropdownClick(x) {
+        initReturn = x;
+        await getReadings(initReturn);
+        refreshed = !refreshed;
+    }
 
-  stationID = stationID;
+    async function getReadings(limit) {
+        refreshed = !refreshed;
+        const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit="+limit+"");
+        const data = await res.json();
+        return data;
+    }
+
+    stationID = stationID;
 
   </script>
   
@@ -106,13 +116,38 @@
                         {/if}
 
 
-                        <!--Component SECTION--------------------------------------------->
+                        <!--Get more readings SECTION--------------------------------------------->
                        
                         <hr>
-                        <button type="button" class="btn btn-primary" on:click={showMeasures}>Get the last 50 readings</button>
+                        <h5>Last previous readings</h5>
+                        
+                        
 
                             {#key refreshed}
-                                <MeasuresCard {stationID}/>
+                                    {#await getReadings(initReturn)}
+                                        <p>...loading</p>
+                                        {:then data} 
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Time</th>
+                                                    <th scope="col">Reading</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {#each data.items as {dateTime, value}}
+                                                    
+                                                    <tr>
+                                                        <td>{dateTime}</td>
+                                                        <td>{value}</td>
+                                                    </tr>
+                                                    
+                                                    {/each}
+                                                </tbody>
+                                            </table>
+                                        
+                                        {/await}
+
                             {/key}
                         
                         
@@ -135,6 +170,9 @@
 
 
     <style>
+        .table {
+            text-align: left;
+        }
         .container {
             max-width: 80%;
             margin:auto;
