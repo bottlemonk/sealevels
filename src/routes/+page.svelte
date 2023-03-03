@@ -109,7 +109,7 @@
                         <!--Component SECTION--------------------------------------------->
                        
                         <hr>
-                        <button type="button" class="btn btn-primary" on:click={showMeasures}>Get the last 100 readings</button>
+                        <button type="button" class="btn btn-primary" on:click={showMeasures}>Get the last 50 readings</button>
                         {#if measuresVisible}
                             {#key refreshed}
                                 <MeasuresCard {stationID}/>
