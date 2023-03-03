@@ -1,6 +1,5 @@
 <script>
     /** @type {import('./$types').PageLoad} */
-    import { Line } from 'svelte-chartjs'
 	import MeasuresCard from '../components/MeasuresCard.svelte';
 
     
