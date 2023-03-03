@@ -124,7 +124,7 @@
                         
 
                             {#key refreshed}
-                                    {#await getReadings(initReturn)}
+                                    {#await getReadings(30)}
                                         <p>...loading</p>
                                         {:then data} 
                                             <table class="table">
