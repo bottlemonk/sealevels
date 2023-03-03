@@ -28,14 +28,8 @@
         measuresVisible = false;
   };
 
-    async function dropdownClick(x) {
-        initReturn = x;
-        await getReadings(initReturn);
-        refreshed = !refreshed;
-    }
 
     async function getReadings() {
-        refreshed = !refreshed;
         const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit=50");
         const data = await res.json();
         return data;
