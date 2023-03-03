@@ -34,9 +34,9 @@
         refreshed = !refreshed;
     }
 
-    async function getReadings(limit) {
+    async function getReadings() {
         refreshed = !refreshed;
-        const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit="+limit+"");
+        const res = await fetch("http://environment.data.gov.uk/flood-monitoring/id/stations/" + stationID + "/readings?_sorted&_limit=50");
         const data = await res.json();
         return data;
     }
@@ -120,11 +120,9 @@
                        
                         <hr>
                         <h5>Last previous readings</h5>
-                        
-                        
 
                             {#key refreshed}
-                                    {#await getReadings(30)}
+                                    {#await getReadings()}
                                         <p>...loading</p>
                                         {:then data} 
                                             <table class="table">
@@ -149,8 +147,6 @@
                                         {/await}
 
                             {/key}
-                        
-                        
                         
                         <!---END of SECTION------------------------------------->
 
